@@ -24,6 +24,14 @@ import numpy as np
 MACHINE_EPSILON = np.finfo(np.double).eps
 
 
+# creates an epsilon-impostor
+def impostor(X, epsilon):
+    n = len(X)
+    distance_mx = squareform(pdist(X, metric='euclidean'))
+    blownup_distance_matrix = (distance_mx**2 * epsilon +  np.ones((n,n))- np.identity(n))**0.5
+    X_transformed = cMDS(blownup_distance_matrix, n-1)
+    return X_transformed
+
 def Hbeta(D=np.array([]), beta=1.0):
     """
         Compute the perplexity and the P-row for a specific value of the
